@@ -1,0 +1,177 @@
+<html>
+  <head>
+    {% if title %}
+    <title>{{title}} - microblog</title>
+    {% else %}
+    <title>microblog</title>
+    {% endif %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='base.css') }}">
+  </head>
+
+  <body>
+    <script src="{{ url_for('static', filename='d3.js') }}"></script>
+    <div>Select an experiment:
+    <form action="/submit" method="post" name="experiment">
+            <select id="Experiment_List" name="Experiment_List">
+              <option id="Fibs1_FUS" value="Fibs1_FUS">Fibs1 FUS</option>
+              <option id="Fibs1_TDP43" value="Fibs1_TDP43">Fibs1 TDP43</option>
+              <option id="Fibs2_Multiple_ALS" value="Fibs2_Multiple_ALS">Fibs2 Multiple ALS Lines</option>
+              <option id="Fibs3_TimeCourse" value="Fibs3_TimeCourse">Fibs3 TimeCourse</option>
+              <option id="Fibs3_Reshoot_TimeCourse" value="Fibs3_Reshoot_TimeCourse" file="./Fib3_Reshoot_TimeCourse.csv">Fibs3 Reshoot TimeCourse</option>
+              <option id="Fibs4" value="Fib4" file="./Fibs4.csv">Fibs4</option>
+              <option id="Fibs5" value="Fib5" file="./Fibs5.csv">Fibs5</option>
+            </select> 
+        Cut 5% ? <input type="checkbox" name="cut" checked> 
+        <input type="submit" value="Select">
+    </form>
+</div>
+<div>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <hr>
+    Debug Messages:
+    <ul>
+    {% for message in messages %}
+        <li>{{ message }} </li>
+    {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+    <hr>
+</div>
+<div class="menu">
+    
+    {% include 'menu.html' %}
+    <div class="menu_right">
+        <div>
+        <form action="/run" method="post" name="run_viz">
+            <p>Dataset: <input type="text" name="exp_list" id="input_exp_list"></p>
+            <p>Data to visualize: <select id="data_choice" name="data_choice" onchange="datatype()">
+                <option id="Counts" value="Counts">Stress Granules Counts</option>
+                <option id="Nuclear_Mean_Int" value="Nuclear_Mean_Int">Nuclear FUS Mean Intensity</option>
+                <option id="Nuclear_Mean_Std" value="Nuclear_Mean_Std">Nuclear FUS Std Intensity</option>
+                <option id="Cytoplasm_Mean_Int" value="Cytoplasm_Mean_Int">Cytoplasm FUS Mean Intensity</option>
+                <option id="Cytoplasm_Mean_Std" value="Cytoplasm_Mean_Std">Cytoplasm FUS Std Intensity</option>
+                <option id="N2C" value="N2C">Nuclear to Cytoplasm Ratio</option>
+                <option id="Intensity_pval" value="Intensity_pval">p-Value Distribution of Stress Granule FUS Enrichment</option>
+                <option id="Intensity" value="Intensity">Stress Granules FUS Intensity</option> 
+                <option id="nIntensity" value="nIntensity">Stress Granules Normalized FUS Intensity</option>
+                <option id="Area" value="Area">Stress Granules Area</option>
+                </select>
+            </p>
+            <p>
+                Type of Graph: <select id="graphtype" name="graphtype"> 
+                    <option id="BoxPlot" value="BoxPlot">BoxPlot</option>
+                </select>
+            </p>
+            <p>Plot Parameter: 
+                <p>y top limit: <input type="text" name="plot_ylim" id="plot_ylim"></p>
+                <p>Title: <input type="text" name="plot_title" id="plot_title"></p>
+                <p>X Label: <input type="text" name="plot_xlabel" id="plot_xlabel"></p>
+                <p>Y Label: <input type="text" name="plot_ylabel" id="plot_ylabel"></p>
+            </p>
+            <p>Calculate Stats ? <input type="checkbox" id="stats" name="stats" onchange="stats_clicked()"></p>
+            <p id="stats_menu" style="display:none;">
+                
+                    <select id="stats_test" name="stats_test">
+                        <option id="Mann" value="Mann">Mann-Witney U Test</option>
+                        <option id="ttest" value="ttest">Student independant t-Test</option>
+                    </select> 
+                </br>
+                    Title: <input type="text" name="stats_title"> 
+                </br>
+                    Significant p-Value <input text="stats_pval" name="stats_pval">
+            </p>
+            Run: <input type="submit" value="Run !">
+        </form>
+        </div>
+    <div><form action="/save" method="Post" name="Save">Save analysis: <input type="submit" value="Save"></form></div>
+</div>
+</div>
+<hr>
+<div>
+    {% for plots in session %}
+    <div class="display_plot" id="plot_{{plots.id}}">
+        <div class="plot_title" onclick="disp_plot({{plots.id}})">{{plots.title}}</div>
+        <div class="plots" id="{{plots.id}}">
+            {% if plots.stats%}
+            <div class="plot_left"><img src="{{plots.plot}}" class="img_left"></div>
+            <div class="plot_right"><img src="{{plots.stats}}" class="img_right"></div>
+            {% else %}
+            <div class="plot_one"><img src="{{plots.plot}}"></div>
+            {% endif %}
+        </div>
+    </div> 
+    {% endfor %}
+</div>
+
+
+  <script>
+        
+ function select_all(id) {
+    d3.selectAll("input").attr("value", function () {
+        if (this['name'] == "checkbox") {
+            if (this.id.contains(id) == 1) {
+                if (this.checked == true) {
+                    this.checked = false;
+                }
+                else {
+                    this.checked = true;
+                }
+            }
+        }
+    });
+    checked_cliked();
+}
+
+function checked_cliked() {
+    var exp_list = [];
+    d3.selectAll("input").attr("value", function () {
+        if (this['name'] == "checkbox") {
+            if (this.checked == true) {
+                exp_list.push(this.id);
+            } 
+        }
+    document.getElementById("input_exp_list").value = exp_list.join();
+    });
+}
+
+function datatype() {
+    sel = document.getElementById("data_choice");
+    databox = document.getElementById("graphtype");
+    console.log(sel.value);
+    databox.options.length = 0;
+    if (sel.value =="nIntensity") {
+        databox.options[0]=new Option("BoxPlot", "BoxPlot", false, false);
+        databox.options[1]=new Option("BoxPlot with p-Value", "BoxPlot_pval", true, true);
+    }
+    else {
+        databox.options[0]=new Option("BoxPlot", "BoxPlot", true, false);
+    }
+}
+
+function stats_clicked() {
+    cbox = document.getElementById("stats")
+    p = document.getElementById("stats_menu")
+    if (cbox.checked == true) {
+        p.style = ""
+    }
+    else {
+        p.style = "display:none;"
+    }
+}
+
+function disp_plot(id) {
+    div = document.getElementById(id);
+    if (div.style.visibility == 'hidden') {
+        div.style.visibility = 'visible';
+        div.style.height = 'auto';
+    } 
+    else {
+        div.style.visibility='hidden';
+        div.style.height = '0px';
+    }
+}
+</script>
+  </body>
+</html>

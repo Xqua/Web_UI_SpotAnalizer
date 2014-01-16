@@ -1,0 +1,144 @@
+div {
+    padding: 0px;
+    margin: 0px;
+}
+
+.menu 
+{
+    height: auto;
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    margin-right: 500px;
+    padding-bottom: 10px;
+}
+
+.menu_left
+{
+    display:  table;
+    width:auto;
+    background-color:#eee;
+    border:1px solid  #666666;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    -moz-box-shadow: 5px 5px 5px #000000;
+    -webkit-box-shadow: 5px 5px 5px #000000;
+    box-shadow: 5px 5px 5px #000000;
+    border-spacing:5px;/*cellspacing:poor IE support for  this*/
+    overflow: hidden;
+    float: left;
+   /* border-collapse:separate;*/
+}
+
+.menu_right
+{
+    width: auto;
+    height: auto;
+    float:right;
+    border:solid 1px #000000;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    -moz-box-shadow: 5px 5px 5px #000000;
+    -webkit-box-shadow: 5px 5px 5px #000000;
+    box-shadow: 5px 5px 5px #000000;
+    margin-bottom: 10px;
+    margin-right: 10px;
+}
+
+.menu_row
+{
+   display:table-row;
+   width:auto;
+
+}
+
+.menu_cell
+{
+    float:left;/*fix for  buggy browsers*/
+    display:table-column;
+    width:80px;
+    height:40px;
+    vertical-align: middle;
+    text-align: center;
+    background-color:#ddd;
+}
+
+.menu_legend 
+{
+    background-color: #bbb;
+}
+
+.menu_legend:hover
+{
+    background-color: #aaa;
+}
+
+p {
+    padding: 0px;
+    margin: 0px;
+}
+
+.display_plot 
+{
+    width:100%;
+    overflow: hidden;
+    border:solid 1px #000000;
+    -moz-border-radius: 11px;
+    -webkit-border-radius: 11px;
+    border-radius: 11px;
+    -moz-box-shadow: 5px 5px 5px #000000;
+    -webkit-box-shadow: 5px 5px 5px #000000;
+    box-shadow: 5px 5px 5px #000000;
+    margin-bottom: 15px;
+}
+
+
+.plot_title
+{
+    width: auto;
+    background-color: #ccc;
+}
+
+.plot_title:hover 
+{
+    background-color: #aaa;
+}
+
+.plots
+{
+    height: auto;
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+
+}
+.plot_left
+{
+    width:60%;
+    overflow: hidden;
+    float: left;
+}
+.plot_right
+{
+    width: 40%;
+    float:right;
+}
+
+.plot_one
+{
+    width: 100%;
+}
+
+img.img_left
+{
+    display: block;
+    max-width:100%;
+}
+
+img.img_right
+{
+    display: block;
+    max-width: 100%;
+}
