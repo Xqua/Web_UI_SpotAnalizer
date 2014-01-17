@@ -3,7 +3,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import scipy.stats as stats
-# from pylab import *
+from pylab import *
 from copy import *
 import sqlite3 as lite
 CUT = True
@@ -34,7 +34,7 @@ def Fetch_DB(Times_Conditions, data, db_name, cut=None):
     }
     Times_Conditions = [(i.split('_')[0], i.split('_')[1])
                         for i in Times_Conditions]
-    con = lite.connect('%s.db' % db_name)
+    con = lite.connect('app/db/%s.db' % db_name)
     with con:
         cur = con.cursor()
         res = {'legend': [], 'data': []}
