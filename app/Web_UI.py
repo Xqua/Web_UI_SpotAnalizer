@@ -3,7 +3,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import scipy.stats as stats
-from pylab import *
+# from pylab import *
 from copy import *
 import sqlite3 as lite
 CUT = True
@@ -59,7 +59,7 @@ def Fetch_DB(Times_Conditions, data, db_name, cut=None):
 
 
 def Load_Experiment(db_name):
-    con = lite.connect('%s.db' % db_name)
+    con = lite.connect('app/db/%s.db' % db_name)
     with con:
         cur = con.cursor()
         cur.execute("SELECT Type,ShortName,Name FROM %s_Legend;" % db_name)
