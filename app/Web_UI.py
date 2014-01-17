@@ -280,7 +280,7 @@ def Boxplot(res, filename=None, ylim=None, title="Title", xlabel="xlabel", ylabe
         s.set_ylabel(ylabel)
         medians = range(nbbox)
         mean = range(nbbox)
-        for i in range(nbbox):
+        for i in range(len(b['boxes'])):
             box = b['boxes'][i]
             boxX = []
             boxY = []

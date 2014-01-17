@@ -27,7 +27,7 @@ SESSION = []
 @app.route('/index', methods=['GET', 'POST'])
 def index():
     if EXPERIMENT:
-        experiment, legend = Web_UI.Load_Experiment('Fibs1_FUS')
+        experiment, legend = Web_UI.Load_Experiment(EXPERIMENT)
         menu = Web_UI.Generate_Menu(legend)
         f = open('app/templates/menu.html', 'w')
         f.write(menu)

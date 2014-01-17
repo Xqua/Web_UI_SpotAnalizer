@@ -58,7 +58,7 @@ div {
 {
     float:left;/*fix for  buggy browsers*/
     display:table-column;
-    width:80px;
+    width:50px;
     height:40px;
     vertical-align: middle;
     text-align: center;
@@ -68,6 +68,7 @@ div {
 .menu_legend 
 {
     background-color: #bbb;
+    font-size: 10px;
 }
 
 .menu_legend:hover
