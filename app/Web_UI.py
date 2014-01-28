@@ -6,8 +6,10 @@ import scipy.stats as stats
 from pylab import *
 from copy import *
 import sqlite3 as lite
+import os
 CUT = True
 
+os.environ['DISPLAY'] = ":0"
 
 def Cut(l):
     l_sort = sorted(l)
