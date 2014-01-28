@@ -73,6 +73,7 @@ def reset():
     EXPERIMENT = None
     CUT = None
     SESSION = []
+    return redirect('/index')
 
 
 @app.route('/run', methods=['GET', 'POST'])
