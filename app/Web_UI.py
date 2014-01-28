@@ -9,7 +9,8 @@ import sqlite3 as lite
 import os
 CUT = True
 
-os.environ['DISPLAY'] = ":0"
+if "DISPLAY" not in os.environ.keys():
+    os.environ['DISPLAY'] = ":0"
 
 def Cut(l):
     l_sort = sorted(l)
