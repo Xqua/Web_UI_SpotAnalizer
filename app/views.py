@@ -49,7 +49,10 @@ def submit():
     global EXPERIMENT
     global CUT
     EXPERIMENT = request.form['Experiment_List']
-    CUT = request.form['cut']
+    if request.form.has_key('cut'):
+        CUT = request.form['cut']
+    else:
+        CUT = False
     return redirect('/index')
 
 
@@ -71,7 +74,7 @@ def reset():
     global SESSION
     global EXPERIMENT
     EXPERIMENT = None
-    CUT = None
+    CUT = True
     SESSION = []
     return redirect('/index')
 
@@ -84,8 +87,8 @@ def run():
         filename_exp = request.form['exp_list'].replace(',','-').replace('#','$')
         if len(filename_exp) > 20:
             filename_exp = filename_exp[:20]
-        data = Web_UI.Fetch_DB(request.form['exp_list'].split(
-            ','), request.form['data_choice'], EXPERIMENT, CUT)
+        data = Web_UI.Fetch_DB(request.form['exp_list'].split(','),
+                               request.form['data_choice'], EXPERIMENT, CUT)
         if request.form['plot_ylim']:
             ylim = float(request.form['plot_ylim'])
         else:
