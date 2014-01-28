@@ -24,6 +24,9 @@
         Cut 5% ? <input type="checkbox" name="cut" checked> 
         <input type="submit" value="Select">
     </form>
+    <form action="/reset" method="post" name="reset">
+        <input type="submit" value="Reset">
+    </form>
 </div>
 <div>
     {% with messages = get_flashed_messages() %}

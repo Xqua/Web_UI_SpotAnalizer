@@ -6,6 +6,7 @@ import zipfile
 
 EXPERIMENT = None
 FILE_ID = 0
+CUT = None
 
 DEFAULT_PLOT_VALUE = {
     'Counts': ["Number of Stress Garnules per cell", "Conditions", "Number of Stress Granule per cell"],
@@ -64,10 +65,24 @@ def save():
     return redirect('/static/Session.zip')
 
 
+@app.route('/reset', methods=['GET', 'POST'])
+def reset():
+    global CUT
+    global SESSION
+    global EXPERIMENT
+    EXPERIMENT = None
+    CUT = None
+    SESSION = []
+
+
 @app.route('/run', methods=['GET', 'POST'])
 def run():
     global FILE_ID
+    global CUT
     if request.form['exp_list']:
+        filename_exp = request.form['exp_list'].replace(',','-').replace('#','$')
+        if len(filename_exp) > 20:
+            filename_exp = filename_exp[:20]
         data = Web_UI.Fetch_DB(request.form['exp_list'].split(
             ','), request.form['data_choice'], EXPERIMENT, CUT)
         if request.form['plot_ylim']:
@@ -91,7 +106,7 @@ def run():
             Web_UI.Boxplot(
                 data,
                 filename="app/static/BoxPlot_%s_%s_%s.png" % (
-                    EXPERIMENT, request.form['exp_list'].replace(',','-').replace('#','$'), FILE_ID),
+                    EXPERIMENT, filename_exp, FILE_ID),
                 ylim=ylim,
                 title=title,
                 xlabel=xlabel,
@@ -105,7 +120,7 @@ def run():
                 data,
                 pval,
                 filename="app/static/BoxPlot_%s_%s_%s.png" % (
-                    EXPERIMENT, request.form['exp_list'].replace(',','-').replace('#','$'), FILE_ID),
+                    EXPERIMENT, filename_exp, FILE_ID),
                 ylim=ylim,
                 title=title,
                 xlabel=xlabel,
@@ -118,19 +133,19 @@ def run():
             Web_UI.Stats(
                 data,
                 test=request.form['stats_test'],
-                filename="app/static/Stats_%s_%s_%s.png" % (EXPERIMENT, request.form['exp_list'].replace(',','-').replace('#','$'), FILE_ID),
+                filename="app/static/Stats_%s_%s_%s.png" % (EXPERIMENT, filename_exp, FILE_ID),
                 title=stats_title,
                 pval_max=None)
             SESSION.append({
                 'id': FILE_ID,
                 'title': "dataset:%s _-_ data:%s ID:%s" % (request.form['exp_list'], request.form['data_choice'], FILE_ID),
-                'plot': "/static/BoxPlot_%s_%s_%s.png" % (EXPERIMENT, request.form['exp_list'].replace(',','-').replace('#','$'), FILE_ID),
-                'stats': "/static/Stats_%s_%s_%s.png" % (EXPERIMENT, request.form['exp_list'].replace(',','-').replace('#','$'), FILE_ID)})
+                'plot': "/static/BoxPlot_%s_%s_%s.png" % (EXPERIMENT, filename_exp, FILE_ID),
+                'stats': "/static/Stats_%s_%s_%s.png" % (EXPERIMENT, filename_exp, FILE_ID)})
         else:
             SESSION.append({
                 'id': FILE_ID,
                 'title': "dataset:%s _-_ data:%s ID:%s" % (request.form['exp_list'], request.form['data_choice'], FILE_ID),
-                'plot': "/static/BoxPlot_%s_%s_%s.png" % (EXPERIMENT, request.form['exp_list'].replace(',','-').replace('#','$'), FILE_ID),
+                'plot': "/static/BoxPlot_%s_%s_%s.png" % (EXPERIMENT, filename_exp, FILE_ID),
                 'stats': None})
         FILE_ID += 1
     else:
